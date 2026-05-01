@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
+from app.services.llm_service import call_llm
 
 # Initializing app
 app = FastAPI(title = "GenAI Assistant")
@@ -11,10 +12,11 @@ class ChatRequest(BaseModel):
 # Create a EndPoint
 @app.post("/chat")
 async def chat_endpoint(request: ChatRequest):
-    user_input = request.message
+    # user_input = request.message
+    ai_response = call_llm(request.message)
     return {
         "status": "success",
-        "response": f"Server received: {user_input}. Ready for AI Integration"
+        "response": ai_response
     }
 
 # Root Endpoint for Health CheckUp
