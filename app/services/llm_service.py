@@ -1,4 +1,5 @@
 import ollama
+from app.exceptions import OllamaServiceError
 
 def call_llm(user_prompt_and_history: list):
     try:
@@ -14,5 +15,6 @@ def call_llm(user_prompt_and_history: list):
             options = {'num_predict': 100} # Small limit due to resource constraint
         )
         return response['message']['content']
+    
     except Exception as e:
-        return f"Error connecting to Ollama: {str(e)}"
+        raise OllamaServiceError(f"Ollama failed to respond: {str(e)}")
