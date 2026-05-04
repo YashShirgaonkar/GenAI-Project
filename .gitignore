@@ -2,3 +2,4 @@
 ai-app-env/
 __pycache__/
 .vscode/
+logs/

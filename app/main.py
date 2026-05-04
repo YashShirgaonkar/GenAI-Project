@@ -18,7 +18,7 @@ async def ollama_exception_handler(request: Request, exc: OllamaServiceError):
 
     # Logging error to server side so we can track it
     logger.error(f"AI Service Error: {exc.message}") 
-     
+    
     return JSONResponse(
         status_code= 503,   # 503 means "Service Unavailable"
         content={
