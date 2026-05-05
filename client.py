@@ -42,30 +42,34 @@ def chat():
         history.append({"role": "user", "content": user_input})
 
         try:
-            print("Assistant is thinking...", end = "\r")
+            print("Assistant: ", end = "", flush = True)
 
             #Sending request with 60-second timeout
             response = requests.post(
                 API_URL,
                 json = {"message": history},
+                stream=True,
                 timeout = 120
             )
 
-            if response.status_code == 200:
-                ai_message = response.json().get("response")
-                print(f"Assistant: {ai_message}")
+            full_response_content = ""
 
-                #Adding assiatant reponse to history
-                history.append({"role": "Assistant", "content": ai_message})
+            #Iterating over chunk of text coming form the server.
+            for chunk in response.iter_content(decode_unicode=True):
+                if chunk:
+                    print(chunk, end="", flush=True)    #printing word by word
+                    full_response_content += chunk
+
+            print() #Move to next line after finished
+
+            if response.status_code == 200:
+                history.append({"role": "Assistant", "content": full_response_content})
 
             else:
-                error_detail = response.json.get("message","Unknown Error")
-                print(f"\nError: {error_detail}")
+                print(f"\nError: {response.status_code}")
 
-        except requests.exceptions.Timeout:
-            print("\nError: The Server took too long to respond. (Timeout)")
-        except requests.exceptions.ConnectionError:
-            print("\nError: Could not connect to the server. Is FastAPI running ?")
+        except Exception as e:
+            print(f"\nConnectino Error: {e}")
 
 if __name__ == "__main__":
     chat()

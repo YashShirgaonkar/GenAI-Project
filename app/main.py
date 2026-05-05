@@ -1,10 +1,12 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
+from fastapi.responses import StreamingResponse 
 from pydantic import BaseModel
 from typing import List
 from app.services.llm_service import call_llm
 from app.exceptions import OllamaServiceError
 import logging
+
 
 # Initializing app
 app = FastAPI(title = "GenAI Assistant - Robust Version")
@@ -40,12 +42,10 @@ class ChatRequest(BaseModel):
 # Create a EndPoint
 @app.post("/chat")
 async def chat_endpoint(request: ChatRequest):
-    # user_input = request.message
-    ai_response = call_llm(request.message)
-    return {
-        "status": "success",
-        "response": ai_response
-    }
+    return StreamingResponse(
+        call_llm(request.message),
+        media_type="text/event_stream"
+    )
 
 # Root Endpoint for Health CheckUp
 @app.get("/")
