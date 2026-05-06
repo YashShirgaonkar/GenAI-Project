@@ -2,9 +2,13 @@ import os
 import requests
 import json
 from datetime import datetime
+from dotenv import load_dotenv
 
-
+# load the key from .env
+load_dotenv()
+API_KEY = os.getenv("API_SECRET_KEY")
 API_URL = "http://127.0.0.1:8000/chat"
+
 
 def save_chat_log(history):
     if not history:
@@ -42,15 +46,24 @@ def chat():
         history.append({"role": "user", "content": user_input})
 
         try:
+
+            # We add the "access_tokem" to the headers
+            headers = {"access_token": API_KEY}
+            
             print("Assistant: ", end = "", flush = True)
 
             #Sending request with 60-second timeout
             response = requests.post(
                 API_URL,
                 json = {"message": history},
+                headers = headers,
                 stream=True,
                 timeout = 120
             )
+
+            if response.status_code == 403:
+                print("\nError: API Key is invalid or missing")
+                break
 
             full_response_content = ""
 

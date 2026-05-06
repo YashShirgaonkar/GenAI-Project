@@ -1,12 +1,27 @@
 from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse
-from fastapi.responses import StreamingResponse 
+from fastapi.responses import JSONResponse, StreamingResponse
 from pydantic import BaseModel
 from typing import List
 from app.services.llm_service import call_llm
 from app.exceptions import OllamaServiceError
+from fastapi import Security, HTTPException, status
+from fastapi.security import APIKeyHeader
+from dotenv import load_dotenv
 import logging
+import os
 
+
+load_dotenv()
+API_KEY_NAME = "access_token"
+api_key_header = APIKeyHeader(name=API_KEY_NAME, auto_error=False)
+
+def get_api_key(api_key: str = Security(api_key_header)):
+    if api_key == os.getenv("API_SECRET_KEY"):
+        return api_key
+    raise HTTPException(
+        status_code= status.HTTP_403_FORBIDDEN,
+        detail = "Could not validate Credentials" 
+    )
 
 # Initializing app
 app = FastAPI(title = "GenAI Assistant - Robust Version")
@@ -41,7 +56,7 @@ class ChatRequest(BaseModel):
 
 # Create a EndPoint
 @app.post("/chat")
-async def chat_endpoint(request: ChatRequest):
+async def chat_endpoint(request: ChatRequest, api_key: str = Security(get_api_key)):
     return StreamingResponse(
         call_llm(request.message),
         media_type="text/event_stream"
