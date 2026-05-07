@@ -9,6 +9,7 @@ from fastapi.security import APIKeyHeader
 from dotenv import load_dotenv
 import logging
 import os
+from app.config import PERSONAS
 
 
 load_dotenv()
@@ -53,12 +54,18 @@ class Message(BaseModel):
 # Defining request body to accept a list of those messages 
 class ChatRequest(BaseModel):
     message: List[Message]
+    mode: str = "mentor"
 
 # Create a EndPoint
 @app.post("/chat")
 async def chat_endpoint(request: ChatRequest, api_key: str = Security(get_api_key)):
+
+    # Get system prompt base don requested mode.
+    system_instruction = PERSONAS.get(request.mode, PERSONAS["mentor"])
+
+    #passing instructions to the service
     return StreamingResponse(
-        call_llm(request.message),
+        call_llm(request.message, system_instruction),
         media_type="text/event_stream"
     )
 

@@ -1,10 +1,10 @@
 import ollama
 from app.exceptions import OllamaServiceError
 
-def call_llm(user_prompt_and_history: list):
+def call_llm(user_prompt_and_history: list, system_instruction: str):
     try:
         # System Promt
-        system_prompt = {'role':'system', 'content':'You are a Senior Data Engineer mentor. Use technical language, mention tolls like Python and SQL when relevant, and always provide a one-sentence tip for a fresher.'}
+        system_prompt = {'role':'system', 'content': 'system_instruction'}
         
         # Combining System prompt with user history
         full_context = [system_prompt] + user_prompt_and_history

@@ -10,7 +10,7 @@ API_KEY = os.getenv("API_SECRET_KEY")
 API_URL = "http://127.0.0.1:8000/chat"
 
 
-def save_chat_log(history):
+def save_chat_log(history, selected_mode):
     if not history:
         return 
     
@@ -21,7 +21,7 @@ def save_chat_log(history):
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     
     #Save inside logs folder
-    filename = os.path.join("logs",f"chat_log_{timestamp}.json")
+    filename = os.path.join("logs",f"{selected_mode}_chat_log_{timestamp}.json")
 
     with open(filename, "w") as f:
         json.dump(history, f, indent=4)
@@ -30,7 +30,18 @@ def save_chat_log(history):
 
 
 def chat():
+    print()
     print("---Gen AI Project (Type 'exit' to quit)---")
+    print()
+    print("Available Modes: mentor, sql, coder")
+    print()
+
+    #Simple mode selection
+    selected_mode = input("Select mode (default=mentor): ").strip().lower()
+    if selected_mode not in ["mentor","sql","coder"]:
+        selected_mode = "mentor"
+
+    print(f"-----Active Mode: {selected_mode.upper()}-----")
 
     # Local history Storage
     history = []
@@ -39,7 +50,7 @@ def chat():
         user_input = input("\nYou: ")
 
         if user_input.lower() in ['exit','quit']:
-            save_chat_log(history)  #saving before leaving
+            save_chat_log(history, selected_mode)  #saving before leaving
             break
 
         #adding user_input to history
@@ -55,7 +66,9 @@ def chat():
             #Sending request with 60-second timeout
             response = requests.post(
                 API_URL,
-                json = {"message": history},
+                json = {"message": history,
+                        "mode" : selected_mode
+                    },
                 headers = headers,
                 stream=True,
                 timeout = 120
