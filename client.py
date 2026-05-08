@@ -49,6 +49,42 @@ def chat():
     while True:
         user_input = input("\nYou: ")
 
+        if not user_input:
+            continue
+
+        # Handle Slash Commands
+        if user_input.startswith("/"):
+            command = user_input.lower()
+
+            if command == "/clear":
+                if history:
+                    save_chat_log(history, selected_mode)
+                    history = []
+                    print("Session archived. History cleared for {selected_mode.upper()}")
+                else:
+                    print("--- History is already empty. ---")
+                continue
+            
+            elif command == "/mode":
+                new_mode = input("Select new mode (mentor, sql, coder): ").strip()
+                if new_mode in ["mentor","sql", "coder"]:
+                    selected_mode = new_mode
+                    print(f"--- Switched to {selected_mode.upper()} mode. History Preserved. ---")
+
+                    if len(history)>10:
+                        print("Note: History is long (>10 msgs). If generationis slow, use /clear.")
+                else: 
+                    print("Invalid mode. Keeping current.")
+                continue
+
+            elif command == "/stats":
+                print(f"--- Stats: {len(history)} messages in memory. Mode: {selected_mode.upper()} ---")
+                continue
+
+            elif command == "/help":
+                print("Commands: /clear, /mode, /stats, /help, exit")
+                continue
+
         if user_input.lower() in ['exit','quit']:
             save_chat_log(history, selected_mode)  #saving before leaving
             break
