@@ -33,12 +33,12 @@ def chat():
     print()
     print("---Gen AI Project (Type 'exit' to quit)---")
     print()
-    print("Available Modes: mentor, sql, coder")
+    print("Available Modes: mentor, sql, coder, rag")
     print()
 
     #Simple mode selection
     selected_mode = input("Select mode (default=mentor): ").strip().lower()
-    if selected_mode not in ["mentor","sql","coder"]:
+    if selected_mode not in ["mentor","sql","coder","rag"]:
         selected_mode = "mentor"
 
     print(f"-----Active Mode: {selected_mode.upper()}-----")
@@ -66,8 +66,8 @@ def chat():
                 continue
             
             elif command == "/mode":
-                new_mode = input("Select new mode (mentor, sql, coder): ").strip()
-                if new_mode in ["mentor","sql", "coder"]:
+                new_mode = input("Select new mode (mentor, sql, coder, rag): ").strip()
+                if new_mode in ["mentor","sql", "coder, rag"]:
                     selected_mode = new_mode
                     print(f"--- Switched to {selected_mode.upper()} mode. History Preserved. ---")
 
@@ -131,7 +131,7 @@ def chat():
                 print(f"\nError: {response.status_code}")
 
         except Exception as e:
-            print(f"\nConnectino Error: {e}")
+            print(f"\nConnection Error: {e}")
 
 if __name__ == "__main__":
     chat()

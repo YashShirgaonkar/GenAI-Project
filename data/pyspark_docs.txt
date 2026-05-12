@@ -1,0 +1,897 @@
+Spark Core
+Public Classes
+SparkContext([master, appName, sparkHome, ...])
+
+Main entry point for Spark functionality.
+
+RDD(jrdd, ctx[, jrdd_deserializer])
+
+A Resilient Distributed Dataset (RDD), the basic abstraction in Spark.
+
+Broadcast([sc, value, pickle_registry, ...])
+
+A broadcast variable created with SparkContext.broadcast().
+
+Accumulator(aid, value, accum_param)
+
+A shared variable that can be accumulated, i.e., has a commutative and associative "add" operation.
+
+AccumulatorParam()
+
+Helper object that defines how to accumulate values of a given type.
+
+SparkConf([loadDefaults, _jvm, _jconf])
+
+Configuration for a Spark application.
+
+SparkFiles()
+
+Resolves paths to files added through SparkContext.addFile().
+
+StorageLevel(useDisk, useMemory, useOffHeap, ...)
+
+Flags for controlling the storage of an RDD.
+
+TaskContext()
+
+Contextual information about a task which can be read or mutated during execution.
+
+RDDBarrier(rdd)
+
+Wraps an RDD in a barrier stage, which forces Spark to launch tasks of this stage together.
+
+BarrierTaskContext()
+
+A TaskContext with extra contextual info and tooling for tasks in a barrier stage.
+
+BarrierTaskInfo(address)
+
+Carries all task infos of a barrier task.
+
+InheritableThread(target, *args[, session])
+
+Thread that is recommended to be used in PySpark when the pinned thread mode is enabled.
+
+util.VersionUtils()
+
+Provides utility method to determine Spark versions with given input string.
+
+Spark Context APIs
+SparkContext.PACKAGE_EXTENSIONS
+
+SparkContext.accumulator(value[, accum_param])
+
+Create an Accumulator with the given initial value, using a given AccumulatorParam helper object to define how to add values of the data type if provided.
+
+SparkContext.addArchive(path)
+
+Add an archive to be downloaded with this Spark job on every node.
+
+SparkContext.addFile(path[, recursive])
+
+Add a file to be downloaded with this Spark job on every node.
+
+SparkContext.addJobTag(tag)
+
+Add a tag to be assigned to all the jobs started by this thread.
+
+SparkContext.addPyFile(path)
+
+Add a .py or .zip dependency for all tasks to be executed on this SparkContext in the future.
+
+SparkContext.applicationId
+
+A unique identifier for the Spark application.
+
+SparkContext.binaryFiles(path[, minPartitions])
+
+Read a directory of binary files from HDFS, a local file system (available on all nodes), or any Hadoop-supported file system URI as a byte array.
+
+SparkContext.binaryRecords(path, recordLength)
+
+Load data from a flat binary file, assuming each record is a set of numbers with the specified numerical format (see ByteBuffer), and the number of bytes per record is constant.
+
+SparkContext.broadcast(value)
+
+Broadcast a read-only variable to the cluster, returning a Broadcast object for reading it in distributed functions.
+
+SparkContext.cancelAllJobs()
+
+Cancel all jobs that have been scheduled or are running.
+
+SparkContext.cancelJobGroup(groupId)
+
+Cancel active jobs for the specified group.
+
+SparkContext.cancelJobsWithTag(tag)
+
+Cancel active jobs that have the specified tag.
+
+SparkContext.clearJobTags()
+
+Clear the current thread's job tags.
+
+SparkContext.defaultMinPartitions
+
+Default min number of partitions for Hadoop RDDs when not given by user
+
+SparkContext.defaultParallelism
+
+Default level of parallelism to use when not given by user (e.g.
+
+SparkContext.dump_profiles(path)
+
+Dump the profile stats into directory path
+
+SparkContext.emptyRDD()
+
+Create an RDD that has no partitions or elements.
+
+SparkContext.getCheckpointDir()
+
+Return the directory where RDDs are checkpointed.
+
+SparkContext.getConf()
+
+Return a copy of this SparkContext's configuration SparkConf.
+
+SparkContext.getJobTags()
+
+Get the tags that are currently set to be assigned to all the jobs started by this thread.
+
+SparkContext.getLocalProperty(key)
+
+Get a local property set in this thread, or null if it is missing.
+
+SparkContext.getOrCreate([conf])
+
+Get or instantiate a SparkContext and register it as a singleton object.
+
+SparkContext.getSystemProperty(key)
+
+Get a Java system property, such as java.home.
+
+SparkContext.hadoopFile(path, ...[, ...])
+
+Read an 'old' Hadoop InputFormat with arbitrary key and value class from HDFS, a local file system (available on all nodes), or any Hadoop-supported file system URI.
+
+SparkContext.hadoopRDD(inputFormatClass, ...)
+
+Read an 'old' Hadoop InputFormat with arbitrary key and value class, from an arbitrary Hadoop configuration, which is passed in as a Python dict.
+
+SparkContext.listArchives
+
+Returns a list of archive paths that are added to resources.
+
+SparkContext.listFiles
+
+Returns a list of file paths that are added to resources.
+
+SparkContext.newAPIHadoopFile(path, ...[, ...])
+
+Read a 'new API' Hadoop InputFormat with arbitrary key and value class from HDFS, a local file system (available on all nodes), or any Hadoop-supported file system URI.
+
+SparkContext.newAPIHadoopRDD(...[, ...])
+
+Read a 'new API' Hadoop InputFormat with arbitrary key and value class, from an arbitrary Hadoop configuration, which is passed in as a Python dict.
+
+SparkContext.parallelize(c[, numSlices])
+
+Distribute a local Python collection to form an RDD.
+
+SparkContext.pickleFile(name[, minPartitions])
+
+Load an RDD previously saved using RDD.saveAsPickleFile() method.
+
+SparkContext.range(start[, end, step, numSlices])
+
+Create a new RDD of int containing elements from start to end (exclusive), increased by step every element.
+
+SparkContext.resources
+
+Return the resource information of this SparkContext.
+
+SparkContext.removeJobTag(tag)
+
+Remove a tag previously added to be assigned to all the jobs started by this thread.
+
+SparkContext.runJob(rdd, partitionFunc[, ...])
+
+Executes the given partitionFunc on the specified set of partitions, returning the result as an array of elements.
+
+SparkContext.sequenceFile(path[, keyClass, ...])
+
+Read a Hadoop SequenceFile with arbitrary key and value Writable class from HDFS, a local file system (available on all nodes), or any Hadoop-supported file system URI.
+
+SparkContext.setCheckpointDir(dirName)
+
+Set the directory under which RDDs are going to be checkpointed.
+
+SparkContext.setInterruptOnCancel(...)
+
+Set the behavior of job cancellation from jobs started in this thread.
+
+SparkContext.setJobDescription(value)
+
+Set a human readable description of the current job.
+
+SparkContext.setJobGroup(groupId, description)
+
+Assigns a group ID to all the jobs started by this thread until the group ID is set to a different value or cleared.
+
+SparkContext.setLocalProperty(key, value)
+
+Set a local property that affects jobs submitted from this thread, such as the Spark fair scheduler pool.
+
+SparkContext.setLogLevel(logLevel)
+
+Control our logLevel.
+
+SparkContext.setSystemProperty(key, value)
+
+Set a Java system property, such as spark.executor.memory.
+
+SparkContext.show_profiles()
+
+Print the profile stats to stdout
+
+SparkContext.sparkUser()
+
+Get SPARK_USER for user who is running SparkContext.
+
+SparkContext.startTime
+
+Return the epoch time when the SparkContext was started.
+
+SparkContext.statusTracker()
+
+Return StatusTracker object
+
+SparkContext.stop()
+
+Shut down the SparkContext.
+
+SparkContext.textFile(name[, minPartitions, ...])
+
+Read a text file from HDFS, a local file system (available on all nodes), or any Hadoop-supported file system URI, and return it as an RDD of Strings.
+
+SparkContext.uiWebUrl
+
+Return the URL of the SparkUI instance started by this SparkContext
+
+SparkContext.union(rdds)
+
+Build the union of a list of RDDs.
+
+SparkContext.version
+
+The version of Spark on which this application is running.
+
+SparkContext.wholeTextFiles(path[, ...])
+
+Read a directory of text files from HDFS, a local file system (available on all nodes), or any Hadoop-supported file system URI.
+
+RDD APIs
+RDD.aggregate(zeroValue, seqOp, combOp)
+
+Aggregate the elements of each partition, and then the results for all the partitions, using a given combine functions and a neutral "zero value."
+
+RDD.aggregateByKey(zeroValue, seqFunc, combFunc)
+
+Aggregate the values of each key, using given combine functions and a neutral "zero value".
+
+RDD.barrier()
+
+Marks the current stage as a barrier stage, where Spark must launch all tasks together.
+
+RDD.cache()
+
+Persist this RDD with the default storage level (MEMORY_ONLY).
+
+RDD.cartesian(other)
+
+Return the Cartesian product of this RDD and another one, that is, the RDD of all pairs of elements (a, b) where a is in self and b is in other.
+
+RDD.checkpoint()
+
+Mark this RDD for checkpointing.
+
+RDD.cleanShuffleDependencies([blocking])
+
+Removes an RDD's shuffles and it's non-persisted ancestors.
+
+RDD.coalesce(numPartitions[, shuffle])
+
+Return a new RDD that is reduced into numPartitions partitions.
+
+RDD.cogroup(other[, numPartitions])
+
+For each key k in self or other, return a resulting RDD that contains a tuple with the list of values for that key in self as well as other.
+
+RDD.collect()
+
+Return a list that contains all the elements in this RDD.
+
+RDD.collectAsMap()
+
+Return the key-value pairs in this RDD to the master as a dictionary.
+
+RDD.collectWithJobGroup(groupId, description)
+
+When collect rdd, use this method to specify job group.
+
+RDD.combineByKey(createCombiner, mergeValue, ...)
+
+Generic function to combine the elements for each key using a custom set of aggregation functions.
+
+RDD.context
+
+The SparkContext that this RDD was created on.
+
+RDD.count()
+
+Return the number of elements in this RDD.
+
+RDD.countApprox(timeout[, confidence])
+
+Approximate version of count() that returns a potentially incomplete result within a timeout, even if not all tasks have finished.
+
+RDD.countApproxDistinct([relativeSD])
+
+Return approximate number of distinct elements in the RDD.
+
+RDD.countByKey()
+
+Count the number of elements for each key, and return the result to the master as a dictionary.
+
+RDD.countByValue()
+
+Return the count of each unique value in this RDD as a dictionary of (value, count) pairs.
+
+RDD.distinct([numPartitions])
+
+Return a new RDD containing the distinct elements in this RDD.
+
+RDD.filter(f)
+
+Return a new RDD containing only the elements that satisfy a predicate.
+
+RDD.first()
+
+Return the first element in this RDD.
+
+RDD.flatMap(f[, preservesPartitioning])
+
+Return a new RDD by first applying a function to all elements of this RDD, and then flattening the results.
+
+RDD.flatMapValues(f)
+
+Pass each value in the key-value pair RDD through a flatMap function without changing the keys; this also retains the original RDD's partitioning.
+
+RDD.fold(zeroValue, op)
+
+Aggregate the elements of each partition, and then the results for all the partitions, using a given associative function and a neutral "zero value."
+
+RDD.foldByKey(zeroValue, func[, ...])
+
+Merge the values for each key using an associative function "func" and a neutral "zeroValue" which may be added to the result an arbitrary number of times, and must not change the result (e.g., 0 for addition, or 1 for multiplication.).
+
+RDD.foreach(f)
+
+Applies a function to all elements of this RDD.
+
+RDD.foreachPartition(f)
+
+Applies a function to each partition of this RDD.
+
+RDD.fullOuterJoin(other[, numPartitions])
+
+Perform a right outer join of self and other.
+
+RDD.getCheckpointFile()
+
+Gets the name of the file to which this RDD was checkpointed
+
+RDD.getNumPartitions()
+
+Returns the number of partitions in RDD
+
+RDD.getResourceProfile()
+
+Get the pyspark.resource.ResourceProfile specified with this RDD or None if it wasn't specified.
+
+RDD.getStorageLevel()
+
+Get the RDD's current storage level.
+
+RDD.glom()
+
+Return an RDD created by coalescing all elements within each partition into a list.
+
+RDD.groupBy(f[, numPartitions, partitionFunc])
+
+Return an RDD of grouped items.
+
+RDD.groupByKey([numPartitions, partitionFunc])
+
+Group the values for each key in the RDD into a single sequence.
+
+RDD.groupWith(other, *others)
+
+Alias for cogroup but with support for multiple RDDs.
+
+RDD.histogram(buckets)
+
+Compute a histogram using the provided buckets.
+
+RDD.id()
+
+A unique ID for this RDD (within its SparkContext).
+
+RDD.intersection(other)
+
+Return the intersection of this RDD and another one.
+
+RDD.isCheckpointed()
+
+Return whether this RDD is checkpointed and materialized, either reliably or locally.
+
+RDD.isEmpty()
+
+Returns true if and only if the RDD contains no elements at all.
+
+RDD.isLocallyCheckpointed()
+
+Return whether this RDD is marked for local checkpointing.
+
+RDD.join(other[, numPartitions])
+
+Return an RDD containing all pairs of elements with matching keys in self and other.
+
+RDD.keyBy(f)
+
+Creates tuples of the elements in this RDD by applying f.
+
+RDD.keys()
+
+Return an RDD with the keys of each tuple.
+
+RDD.leftOuterJoin(other[, numPartitions])
+
+Perform a left outer join of self and other.
+
+RDD.localCheckpoint()
+
+Mark this RDD for local checkpointing using Spark's existing caching layer.
+
+RDD.lookup(key)
+
+Return the list of values in the RDD for key key.
+
+RDD.map(f[, preservesPartitioning])
+
+Return a new RDD by applying a function to each element of this RDD.
+
+RDD.mapPartitions(f[, preservesPartitioning])
+
+Return a new RDD by applying a function to each partition of this RDD.
+
+RDD.mapPartitionsWithIndex(f[, ...])
+
+Return a new RDD by applying a function to each partition of this RDD, while tracking the index of the original partition.
+
+RDD.mapPartitionsWithSplit(f[, ...])
+
+Return a new RDD by applying a function to each partition of this RDD, while tracking the index of the original partition.
+
+RDD.mapValues(f)
+
+Pass each value in the key-value pair RDD through a map function without changing the keys; this also retains the original RDD's partitioning.
+
+RDD.max([key])
+
+Find the maximum item in this RDD.
+
+RDD.mean()
+
+Compute the mean of this RDD's elements.
+
+RDD.meanApprox(timeout[, confidence])
+
+Approximate operation to return the mean within a timeout or meet the confidence.
+
+RDD.min([key])
+
+Find the minimum item in this RDD.
+
+RDD.name()
+
+Return the name of this RDD.
+
+RDD.partitionBy(numPartitions[, partitionFunc])
+
+Return a copy of the RDD partitioned using the specified partitioner.
+
+RDD.persist([storageLevel])
+
+Set this RDD's storage level to persist its values across operations after the first time it is computed.
+
+RDD.pipe(command[, env, checkCode])
+
+Return an RDD created by piping elements to a forked external process.
+
+RDD.randomSplit(weights[, seed])
+
+Randomly splits this RDD with the provided weights.
+
+RDD.reduce(f)
+
+Reduces the elements of this RDD using the specified commutative and associative binary operator.
+
+RDD.reduceByKey(func[, numPartitions, ...])
+
+Merge the values for each key using an associative and commutative reduce function.
+
+RDD.reduceByKeyLocally(func)
+
+Merge the values for each key using an associative and commutative reduce function, but return the results immediately to the master as a dictionary.
+
+RDD.repartition(numPartitions)
+
+Return a new RDD that has exactly numPartitions partitions.
+
+RDD.repartitionAndSortWithinPartitions([...])
+
+Repartition the RDD according to the given partitioner and, within each resulting partition, sort records by their keys.
+
+RDD.rightOuterJoin(other[, numPartitions])
+
+Perform a right outer join of self and other.
+
+RDD.sample(withReplacement, fraction[, seed])
+
+Return a sampled subset of this RDD.
+
+RDD.sampleByKey(withReplacement, fractions)
+
+Return a subset of this RDD sampled by key (via stratified sampling).
+
+RDD.sampleStdev()
+
+Compute the sample standard deviation of this RDD's elements (which corrects for bias in estimating the standard deviation by dividing by N-1 instead of N).
+
+RDD.sampleVariance()
+
+Compute the sample variance of this RDD's elements (which corrects for bias in estimating the variance by dividing by N-1 instead of N).
+
+RDD.saveAsHadoopDataset(conf[, ...])
+
+Output a Python RDD of key-value pairs (of form RDD[(K, V)]) to any Hadoop file system, using the old Hadoop OutputFormat API (mapred package).
+
+RDD.saveAsHadoopFile(path, outputFormatClass)
+
+Output a Python RDD of key-value pairs (of form RDD[(K, V)]) to any Hadoop file system, using the old Hadoop OutputFormat API (mapred package).
+
+RDD.saveAsNewAPIHadoopDataset(conf[, ...])
+
+Output a Python RDD of key-value pairs (of form RDD[(K, V)]) to any Hadoop file system, using the new Hadoop OutputFormat API (mapreduce package).
+
+RDD.saveAsNewAPIHadoopFile(path, ...[, ...])
+
+Output a Python RDD of key-value pairs (of form RDD[(K, V)]) to any Hadoop file system, using the new Hadoop OutputFormat API (mapreduce package).
+
+RDD.saveAsPickleFile(path[, batchSize])
+
+Save this RDD as a SequenceFile of serialized objects.
+
+RDD.saveAsSequenceFile(path[, ...])
+
+Output a Python RDD of key-value pairs (of form RDD[(K, V)]) to any Hadoop file system, using the "org.apache.hadoop.io.Writable" types that we convert from the RDD's key and value types.
+
+RDD.saveAsTextFile(path[, compressionCodecClass])
+
+Save this RDD as a text file, using string representations of elements.
+
+RDD.setName(name)
+
+Assign a name to this RDD.
+
+RDD.sortBy(keyfunc[, ascending, numPartitions])
+
+Sorts this RDD by the given keyfunc
+
+RDD.sortByKey([ascending, numPartitions, ...])
+
+Sorts this RDD, which is assumed to consist of (key, value) pairs.
+
+RDD.stats()
+
+Return a StatCounter object that captures the mean, variance and count of the RDD's elements in one operation.
+
+RDD.stdev()
+
+Compute the standard deviation of this RDD's elements.
+
+RDD.subtract(other[, numPartitions])
+
+Return each value in self that is not contained in other.
+
+RDD.subtractByKey(other[, numPartitions])
+
+Return each (key, value) pair in self that has no pair with matching key in other.
+
+RDD.sum()
+
+Add up the elements in this RDD.
+
+RDD.sumApprox(timeout[, confidence])
+
+Approximate operation to return the sum within a timeout or meet the confidence.
+
+RDD.take(num)
+
+Take the first num elements of the RDD.
+
+RDD.takeOrdered(num[, key])
+
+Get the N elements from an RDD ordered in ascending order or as specified by the optional key function.
+
+RDD.takeSample(withReplacement, num[, seed])
+
+Return a fixed-size sampled subset of this RDD.
+
+RDD.toDebugString()
+
+A description of this RDD and its recursive dependencies for debugging.
+
+RDD.toLocalIterator([prefetchPartitions])
+
+Return an iterator that contains all of the elements in this RDD.
+
+RDD.top(num[, key])
+
+Get the top N elements from an RDD.
+
+RDD.treeAggregate(zeroValue, seqOp, combOp)
+
+Aggregates the elements of this RDD in a multi-level tree pattern.
+
+RDD.treeReduce(f[, depth])
+
+Reduces the elements of this RDD in a multi-level tree pattern.
+
+RDD.union(other)
+
+Return the union of this RDD and another one.
+
+RDD.unpersist([blocking])
+
+Mark the RDD as non-persistent, and remove all blocks for it from memory and disk.
+
+RDD.values()
+
+Return an RDD with the values of each tuple.
+
+RDD.variance()
+
+Compute the variance of this RDD's elements.
+
+RDD.withResources(profile)
+
+Specify a pyspark.resource.ResourceProfile to use when calculating this RDD.
+
+RDD.zip(other)
+
+Zips this RDD with another one, returning key-value pairs with the first element in each RDD second element in each RDD, etc.
+
+RDD.zipWithIndex()
+
+Zips this RDD with its element indices.
+
+RDD.zipWithUniqueId()
+
+Zips this RDD with generated unique Long ids.
+
+Broadcast and Accumulator
+Broadcast.destroy([blocking])
+
+Destroy all data and metadata related to this broadcast variable.
+
+Broadcast.dump(value, f)
+
+Write a pickled representation of value to the open file or socket.
+
+Broadcast.load(file)
+
+Read a pickled representation of value from the open file or socket.
+
+Broadcast.load_from_path(path)
+
+Read the pickled representation of an object from the open file and return the reconstituted object hierarchy specified therein.
+
+Broadcast.unpersist([blocking])
+
+Delete cached copies of this broadcast on the executors.
+
+Broadcast.value
+
+Return the broadcasted value
+
+Accumulator.add(term)
+
+Adds a term to this accumulator's value
+
+Accumulator.value
+
+Get the accumulator's value; only usable in driver program
+
+AccumulatorParam.addInPlace(value1, value2)
+
+Add two values of the accumulator's data type, returning a new value; for efficiency, can also update value1 in place and return it.
+
+AccumulatorParam.zero(value)
+
+Provide a "zero value" for the type, compatible in dimensions with the provided value (e.g., a zero vector)
+
+Management
+inheritable_thread_target([f])
+
+Return thread target wrapper which is recommended to be used in PySpark when the pinned thread mode is enabled.
+
+SparkConf.contains(key)
+
+Does this configuration contain a given key?
+
+SparkConf.get(key[, defaultValue])
+
+Get the configured value for some key, or return a default otherwise.
+
+SparkConf.getAll()
+
+Get all values as a list of key-value pairs.
+
+SparkConf.set(key, value)
+
+Set a configuration property.
+
+SparkConf.setAll(pairs)
+
+Set multiple parameters, passed as a list of key-value pairs.
+
+SparkConf.setAppName(value)
+
+Set application name.
+
+SparkConf.setExecutorEnv([key, value, pairs])
+
+Set an environment variable to be passed to executors.
+
+SparkConf.setIfMissing(key, value)
+
+Set a configuration property, if not already set.
+
+SparkConf.setMaster(value)
+
+Set master URL to connect to.
+
+SparkConf.setSparkHome(value)
+
+Set path where Spark is installed on worker nodes.
+
+SparkConf.toDebugString()
+
+Returns a printable version of the configuration, as a list of key=value pairs, one per line.
+
+SparkFiles.get(filename)
+
+Get the absolute path of a file added through SparkContext.addFile() or SparkContext.addPyFile().
+
+SparkFiles.getRootDirectory()
+
+Get the root directory that contains files added through SparkContext.addFile() or SparkContext.addPyFile().
+
+StorageLevel.DISK_ONLY
+
+StorageLevel.DISK_ONLY_2
+
+StorageLevel.DISK_ONLY_3
+
+StorageLevel.MEMORY_AND_DISK
+
+StorageLevel.MEMORY_AND_DISK_2
+
+StorageLevel.MEMORY_AND_DISK_DESER
+
+StorageLevel.MEMORY_ONLY
+
+StorageLevel.MEMORY_ONLY_2
+
+StorageLevel.OFF_HEAP
+
+TaskContext.attemptNumber()
+
+How many times this task has been attempted.
+
+TaskContext.cpus()
+
+CPUs allocated to the task.
+
+TaskContext.get()
+
+Return the currently active TaskContext.
+
+TaskContext.getLocalProperty(key)
+
+Get a local property set upstream in the driver, or None if it is missing.
+
+TaskContext.partitionId()
+
+The ID of the RDD partition that is computed by this task.
+
+TaskContext.resources()
+
+Resources allocated to the task.
+
+TaskContext.stageId()
+
+The ID of the stage that this task belong to.
+
+TaskContext.taskAttemptId()
+
+An ID that is unique to this task attempt (within the same SparkContext, no two task attempts will share the same attempt ID).
+
+RDDBarrier.mapPartitions(f[, ...])
+
+Returns a new RDD by applying a function to each partition of the wrapped RDD, where tasks are launched together in a barrier stage.
+
+RDDBarrier.mapPartitionsWithIndex(f[, ...])
+
+Returns a new RDD by applying a function to each partition of the wrapped RDD, while tracking the index of the original partition.
+
+BarrierTaskContext.allGather([message])
+
+This function blocks until all tasks in the same stage have reached this routine.
+
+BarrierTaskContext.attemptNumber()
+
+How many times this task has been attempted.
+
+BarrierTaskContext.barrier()
+
+Sets a global barrier and waits until all tasks in this stage hit this barrier.
+
+BarrierTaskContext.cpus()
+
+CPUs allocated to the task.
+
+BarrierTaskContext.get()
+
+Return the currently active BarrierTaskContext.
+
+BarrierTaskContext.getLocalProperty(key)
+
+Get a local property set upstream in the driver, or None if it is missing.
+
+BarrierTaskContext.getTaskInfos()
+
+Returns BarrierTaskInfo for all tasks in this barrier stage, ordered by partition ID.
+
+BarrierTaskContext.partitionId()
+
+The ID of the RDD partition that is computed by this task.
+
+BarrierTaskContext.resources()
+
+Resources allocated to the task.
+
+BarrierTaskContext.stageId()
+
+The ID of the stage that this task belong to.
+
+BarrierTaskContext.taskAttemptId()
+
+An ID that is unique to this task attempt (within the same SparkContext, no two task attempts will share the same attempt ID).
+
+util.VersionUtils.majorMinorVersion(sparkVersion)
+
+Given a Spark version string, return the (major version number, minor version number).

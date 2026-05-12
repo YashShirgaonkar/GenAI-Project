@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 import logging
 import os
 from app.config import PERSONAS
+from app.utils.data_processor import chunk_text, get_relevent_chunk
 
 
 load_dotenv()
@@ -56,12 +57,46 @@ class ChatRequest(BaseModel):
     message: List[Message]
     mode: str = "mentor"
 
+try:
+    with open("data/pyspark_docs.txt", "r") as f:
+        RAW_TEXT = f.read()
+    DOC_CHUNKS = chunk_text(RAW_TEXT)
+    print(f"--- RAG System Ready: Loaded {len(DOC_CHUNKS)} chunks ---")
+except FileNotFoundError:
+    DOC_CHUNKS = []
+    print("--- WARNING: data/pyspark_docs.txt not found. RAG mode will be disabled. ---")
+
+
+
 # Create a EndPoint
 @app.post("/chat")
 async def chat_endpoint(request: ChatRequest, api_key: str = Security(get_api_key)):
 
-    # Get system prompt base don requested mode.
-    system_instruction = PERSONAS.get(request.mode, PERSONAS["mentor"])
+    # If the user selected RAG, then we override the system prompt with data
+    if request.mode == "rag":
+        # We take the last message from user to search with
+        user_query = request.message[-1].content
+        relevent_context = get_relevent_chunk(user_query, DOC_CHUNKS)
+
+        if relevent_context:
+            context_str = "\n".join(relevent_context)
+            system_instruction = (
+                "CRITICAL: You are a closed-domain PySpark bot. "
+                "You have NO outside knowledge. If the answer is not in the context, "
+                "say 'I cannot find this in the documentation.' DO NOT answer general questions."
+            )
+            # 2. PROMPT INJECTION: We wrap the user's question in a cage
+            request.message[-1].content = (
+                f"CONTEXT FROM DOCS:\n{context_str}\n\n"
+                f"QUESTION: {user_query}\n\n"
+                f"INSTRUCTION: Answer using ONLY the context above. If it's not there, say you don't know."
+            )
+        else:
+            system_instruction = "REJECT ALL QUESTIONS. Say: 'No relevant documentation found.'"
+
+    else:
+        #Standard Logic
+        system_instruction = PERSONAS.get(request.mode, PERSONAS["mentor"])
 
     #passing instructions to the service
     return StreamingResponse(
