@@ -94,7 +94,7 @@ def chat():
 
         try:
 
-            # We add the "access_tokem" to the headers
+            # We add the "access_token" to the headers
             headers = {"access_token": API_KEY}
             
             print("Assistant: ", end = "", flush = True)
@@ -107,7 +107,7 @@ def chat():
                     },
                 headers = headers,
                 stream=True,
-                timeout = 120
+                timeout = (10, None)  # <-- (Connect Time, Read Time)
             )
 
             if response.status_code == 403:

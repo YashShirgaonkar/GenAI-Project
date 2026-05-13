@@ -1,5 +1,8 @@
+# pip install -r requirements.txt
+
 fastapi
 uvicorn
 python-dotenv
-ollama
 requests
+pydantic
+ollama

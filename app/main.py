@@ -76,8 +76,17 @@ async def chat_endpoint(request: ChatRequest, api_key: str = Security(get_api_ke
     if request.mode == "rag":
         # We take the last message from user to search with
         user_query = request.message[-1].content
-        relevent_context = get_relevent_chunk(user_query, DOC_CHUNKS)
+        print(f"DEBUG: Searching for chunks for query: {user_query}")
 
+        relevent_context = get_relevent_chunk(user_query, DOC_CHUNKS)
+        print(f"DEBUG: Found {len(relevent_context)} relevent chunks")
+
+        if not relevent_context:
+            async def empty_generator():
+                yield f"I'm sorry, I couldn't find any information about '{user_query}' in the local documentation.".encode()
+
+            return StreamingResponse(empty_generator(), media_type="text/plain")
+        
         if relevent_context:
             context_str = "\n".join(relevent_context)
             system_instruction = (
@@ -92,8 +101,12 @@ async def chat_endpoint(request: ChatRequest, api_key: str = Security(get_api_ke
                 f"INSTRUCTION: Answer using ONLY the context above. If it's not there, say you don't know."
             )
         else:
-            system_instruction = "REJECT ALL QUESTIONS. Say: 'No relevant documentation found.'"
-
+            system_instruction = "You are a helpful assistant."
+            request.messages[-1].content = (
+                f"INSTRUCTION: Tell the user 'I cannot find information about \"{user_query}\" "
+                "in the PySpark documentation.' Do not say anything else."
+            )
+            
     else:
         #Standard Logic
         system_instruction = PERSONAS.get(request.mode, PERSONAS["mentor"])

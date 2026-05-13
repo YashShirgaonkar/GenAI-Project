@@ -15,18 +15,24 @@ def chunk_text(text: str, chunk_size: int = 500, overlap: int = 100):
 import re
 
 def get_relevent_chunk(query: str, chunks: list, top_n: int = 2):
-    query_words = set(re.findall(r'\w+', query.lower()))
+
+    stop_words = {'is', 'the', 'a', 'an', 'what', 'of', 'in', 'at', 'to', 'for', 'it'}
+    query_words = set(re.findall(r'\w+', query.lower())) - stop_words
+
+    if not query_words:
+        return []
 
     # counting how many query words appear each chunk
     scored_chunks = []
     for chunk in chunks:
-        chunk_words = set(re.findall(r'\w+', chunk.lower()))
-        score = len(query_words.intersection(chunk_words))
-        scored_chunks.append((score, chunk))
+        # Match only if the query word exists as a whole word in the chunk
+        score = sum(1 for word in query_words if word in chunk.lower())
+        if score > 1:
+            scored_chunks.append((score, chunk))
 
     # sorting by score (highest first) and return top_n
     scored_chunks.sort(key = lambda x: x[0], reverse = True)
-    return [c[1] for c in scored_chunks[:top_n] if c[0] > 0]
+    return [c[1] for c in scored_chunks[:top_n]]
 
 
 
